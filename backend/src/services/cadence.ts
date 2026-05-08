@@ -189,6 +189,7 @@ export function getScript(tipo: string, tentativaNum: number, lead: LeadContext)
 
   return {
     scriptType: 'REUNIAO',
+    perfil: 'Ação genérica',
     abordagemAbertura: `Execute a ação planejada com ${lead.nomeContato}.`,
     pautaSugerida: '',
     materiaisApoio: [],
@@ -565,6 +566,7 @@ function getFollowUpScript(tentativaNum: number, lead: LeadContext): ReuniaoScri
 
   return {
     scriptType: 'REUNIAO',
+    perfil: `Follow-up ${empresa}`,
     abordagemAbertura: `Follow-up pós-pauta — Dia ${dia} após a reunião com ${contato}`,
     pautaSugerida: tentativaNum === 1
       ? `1. Como ficou depois da nossa conversa?\n2. Alguma dúvida sobre a proposta?\n3. Quem mais precisa estar envolvido na decisão?\n4. Qual é o prazo esperado para a decisão?\n5. Próximo passo concreto`

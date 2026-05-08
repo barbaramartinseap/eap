@@ -565,7 +565,7 @@ O que construtoras bem geridas fazem diferente: processo que sinaliza o desvio a
 ${cta}`
 
   return {
-    tituloInterno: `LinkedIn — ${input.tema.slice(0, 60)}`,
+    tituloInterno: `LinkedIn — ${(input.tema ?? '').slice(0, 60)}`,
     post,
     cta,
     hashtags: getHashtags(input.icp),
@@ -689,12 +689,12 @@ export function agentRotaristaCarrossel(input: AgentInput): CarrosselResult {
 
   const legenda = `${input.tema}.\n\nEsse é um dos pontos que mais vemos em ${icpLabel} que atendemos.\n\nO problema não está nas pessoas. Está no processo.\n\nSalva esse carrossel se fizer sentido pra sua realidade.\n\n${cta}\n\n${getHashtags(input.icp).join(' ')}`
 
-  const promptCapa = `Foto profissional em canteiro de obras brasileiro, estilo editorial. Engenheiro com capacete e EPIs, analisando documento ou tablet. Luz natural, composição 4:5, sem filtros saturados. Texto sobreposto: "${input.tema.slice(0, 50)}..." em fonte bold, branca, sobre overlay navy semitransparente. Estilo premium, sem caricatura, sem banco de imagem genérico.`
+  const promptCapa = `Foto profissional em canteiro de obras brasileiro, estilo editorial. Engenheiro com capacete e EPIs, analisando documento ou tablet. Luz natural, composição 4:5, sem filtros saturados. Texto sobreposto: "${(input.tema ?? '').slice(0, 50)}..." em fonte bold, branca, sobre overlay navy semitransparente. Estilo premium, sem caricatura, sem banco de imagem genérico.`
 
   const promptImagens = `Série de 9 imagens para carrossel Instagram (4:5). Estética consistente: paleta navy (#070D1C), dourado (#B88A2A) e branco. Canteiro de obras, engenharia, gestão, dados, reuniões técnicas. Sem filtros genéricos, sem pessoas sorridentes sem contexto, sem estética motivacional. Tom: profissional, executivo, realista.`
 
   return {
-    titulo: input.tema.slice(0, 80),
+    titulo: (input.tema ?? '').slice(0, 80),
     subtitulo: `O que ${icpLabel} precisam saber sobre isso`,
     paineis,
     legenda,
@@ -813,7 +813,7 @@ const CENAS_ICP: Record<string, string> = {
 export function agentGeradorImagem(input: AgentInput): ImagemResult {
   const proporcao = PROPORCOES[input.formato] ?? '4:5'
   const cena = CENAS_ICP[input.icp] ?? CENAS_ICP['DOR_OPERACIONAL']
-  const temaSlug = input.tema.slice(0, 50)
+  const temaSlug = (input.tema ?? '').slice(0, 50)
 
   const promptImagem = `Fotografia editorial profissional. Contexto: ${cena}. Luz natural ou estúdio controlado. Estilo: profissional, premium, realista, sem filtros artificiais. Paleta de tons: neutros quentes + navy (#070D1C). Composição ${proporcao}. Tema visual: "${temaSlug}". Pessoas com capacete e EPIs quando em canteiro. Sem banco de imagem genérico, sem sorrisos forçados, sem elementos motivacionais.`
 

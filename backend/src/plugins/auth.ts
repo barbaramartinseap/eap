@@ -8,12 +8,16 @@ export interface JwtPayload {
   nome: string
 }
 
+// Augment @fastify/jwt so request.user is typed as JwtPayload
+declare module '@fastify/jwt' {
+  interface FastifyJWT {
+    user: JwtPayload
+  }
+}
+
 declare module 'fastify' {
   interface FastifyInstance {
     authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>
-  }
-  interface FastifyRequest {
-    user: JwtPayload
   }
 }
 
