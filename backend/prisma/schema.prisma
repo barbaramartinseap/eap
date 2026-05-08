@@ -1,0 +1,156 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UnidadeFranqueada {
+  id        String   @id @default(cuid())
+  nome      String
+  email     String   @unique
+  senha     String
+  status    String   @default("ATIVA")
+  cidade    String
+  createdAt DateTime @default(now())
+
+  leads               Lead[]
+  oportunidades       Oportunidade[]
+  tarefas             Tarefa[]
+  notas               NotaInteracao[]
+  conteudosMarketing  ConteudoMarketing[]
+  calendarioEditorial CalendarioEditorial[]
+}
+
+model Lead {
+  id                  String    @id @default(cuid())
+  // Dados básicos
+  nomeEmpresa         String
+  nomeContato         String
+  telefone            String?
+  whatsapp            String?
+  email               String?
+  cidade              String?
+  instagram           String?
+  site                String?
+  // Perfil empresa
+  nichoObra           String    @default("OUTRO")
+  qtdObrasSimultaneas Int       @default(1)
+  faturamentoEstimado String?
+  temSocio            Boolean   @default(false)
+  equipePropia        Boolean   @default(false)
+  qtdEngenheiros      Int       @default(0)
+  // Qualificação
+  dorPrincipal        String    @default("OUTRO")
+  origem              String    @default("CADASTRO_MANUAL")
+  // Score e pipeline
+  scoreIcp            Int       @default(0)
+  scoreUrgencia       Int       @default(0)
+  temperatura         String    @default("FRIO")
+  estagioPipeline     String    @default("NOVO_LEAD")
+  chanceFechamento    Int       @default(0)
+  diasParado          Int       @default(0)
+  // Controle
+  responsavel         String?
+  motivoPerda         String?
+  primeiraAcaoEm      DateTime?
+  observacoes         String?
+  unidadeId           String
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  unidade       UnidadeFranqueada @relation(fields: [unidadeId], references: [id])
+  oportunidades Oportunidade[]
+  tarefas       Tarefa[]
+  notas         NotaInteracao[]
+}
+
+model Oportunidade {
+  id        String   @id @default(cuid())
+  titulo    String
+  estagio   String   @default("NOVO_LEAD")
+  valor     Float?
+  leadId    String
+  unidadeId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lead    Lead              @relation(fields: [leadId], references: [id])
+  unidade UnidadeFranqueada @relation(fields: [unidadeId], references: [id])
+  tarefas Tarefa[]
+  notas   NotaInteracao[]
+}
+
+model Tarefa {
+  id             String   @id @default(cuid())
+  tipo           String
+  status         String   @default("PENDENTE")
+  descricao      String
+  dataVencimento DateTime
+  observacoes    String?
+  tentativaNum   Int      @default(1)
+  leadId         String
+  oportunidadeId String?
+  unidadeId      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  lead         Lead              @relation(fields: [leadId], references: [id])
+  oportunidade Oportunidade?     @relation(fields: [oportunidadeId], references: [id])
+  unidade      UnidadeFranqueada @relation(fields: [unidadeId], references: [id])
+}
+
+model NotaInteracao {
+  id             String   @id @default(cuid())
+  tipo           String
+  conteudo       String
+  resultado      String?
+  leadId         String
+  oportunidadeId String?
+  tarefaId       String?
+  unidadeId      String
+  createdAt      DateTime @default(now())
+
+  lead         Lead              @relation(fields: [leadId], references: [id])
+  oportunidade Oportunidade?     @relation(fields: [oportunidadeId], references: [id])
+  unidade      UnidadeFranqueada @relation(fields: [unidadeId], references: [id])
+}
+
+model ConteudoMarketing {
+  id             String    @id @default(cuid())
+  unidadeId      String
+  canal          String
+  formato        String
+  icp            String
+  objetivo       String
+  tema           String
+  conteudo       String
+  status         String    @default("PRONTO")
+  dataPublicacao DateTime?
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+
+  unidade UnidadeFranqueada @relation(fields: [unidadeId], references: [id])
+
+  @@index([unidadeId])
+}
+
+model CalendarioEditorial {
+  id           String    @id @default(cuid())
+  unidadeId    String
+  data         DateTime
+  canal        String
+  formato      String?
+  tema         String
+  status       String    @default("IDEIA")
+  conteudoId   String?
+  observacoes  String?
+  criadoEm    DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+
+  unidade UnidadeFranqueada @relation(fields: [unidadeId], references: [id])
+
+  @@index([unidadeId])
+}

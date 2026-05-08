@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Marketing Local — EAP IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&family=Anton&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#F4F1EC;--bg-card:#FFFFFF;--bg-soft:#FAF8F3;--bg-dim:#ECEAE4;
+  --navy:#070D1C;--navy2:#101B33;--blue:#1B3D8F;
+  --gold:#B88A2A;--gold-lt:#D4A843;
+  --text-1:#070D1C;--text-2:#5F6673;--text-3:#8C92A0;
+  --border:#E5DFD3;--border-md:#C9BFAE;
+  --danger:#B4232A;--ok:#1F7A4D;--warn:#B7791F;
+  --sb-w:260px;--r:10px;--r-lg:18px;
+  --sh:0 1px 2px rgba(7,13,28,.06),0 4px 12px rgba(7,13,28,.04);
+  --sh-md:0 2px 8px rgba(7,13,28,.10),0 8px 24px rgba(7,13,28,.06);
+  --sh-lg:0 8px 40px rgba(7,13,28,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text-1);font-size:14px;line-height:1.5}
+/* ── LAYOUT ── */
+#app{display:flex;height:100vh;overflow:hidden}
+/* ── SIDEBAR ── */
+.sb{width:var(--sb-w);background:var(--navy);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sb-brand{padding:22px 20px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px}
+.sb-brand img{height:160px;margin:-68px 0 -50px;object-fit:contain}
+.sb-hub{font-family:'Anton',sans-serif;font-size:17px;letter-spacing:.5px;color:var(--gold);text-transform:uppercase}
+.sb-nav{flex:1;padding:12px 0;overflow-y:auto}
+.sb-section{padding:6px 16px 2px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px 9px 16px;margin:1px 8px;border-radius:8px;color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;position:relative}
+.sb-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.sb-item.active{background:rgba(184,138,42,.1);color:#F4F1EC;font-weight:600}
+.sb-item.active::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:3px;height:20px;border-radius:0 3px 3px 0;background:var(--gold)}
+.sb-item .icon{width:18px;height:18px;opacity:.7;flex-shrink:0}
+.sb-item.active .icon{opacity:1}
+.sb-footer{padding:14px 20px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-user{display:flex;align-items:center;gap:9px}
+.sb-av-wrap{width:36px;height:36px;border-radius:50%;position:relative;cursor:pointer;flex-shrink:0;overflow:hidden;background:rgba(184,138,42,.2);border:1.5px solid rgba(184,138,42,.3)}
+.sb-av{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold-lt)}
+.sb-av-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;border-radius:50%}
+.sb-av-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:11px;opacity:0;transition:opacity .15s;border-radius:50%}
+.sb-av-wrap:hover .sb-av-overlay{opacity:1}
+.sb-info{flex:1;overflow:hidden}
+.sb-name{font-size:11.5px;font-weight:600;color:rgba(244,241,236,.78);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-unit-lbl{font-size:9.5px;color:rgba(244,241,236,.28);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.btn-logout{background:none;border:none;color:rgba(244,241,236,.22);cursor:pointer;padding:3px;transition:color .15s;display:flex;flex-shrink:0}
+.btn-logout:hover{color:#B4232A}
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+/* ── TOPBAR ── */
+.topbar{background:linear-gradient(135deg,#070D1C 0%,#0f1f3d 60%,#070D1C 100%);padding:16px 40px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative}
+.topbar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:200px;background:radial-gradient(ellipse at right,rgba(184,138,42,.08) 0%,transparent 70%);pointer-events:none}
+.page-title{font-family:'Anton',sans-serif;font-size:20px;letter-spacing:.5px;color:#F4F1EC;text-transform:uppercase}
+.page-sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:10px;position:relative;z-index:1}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-gold:hover{background:var(--gold-lt)}
+.btn-ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.12)}
+.btn-ghost:hover{background:rgba(255,255,255,.14);color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-outline{background:transparent;color:var(--text-2);border:1px solid var(--border-md)}
+.btn-outline:hover{background:var(--bg-dim);color:var(--text-1)}
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:28px 40px 60px}
+/* ── SECTION HEADERS ── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sec-title{font-family:'Anton',sans-serif;font-size:14px;letter-spacing:.5px;text-transform:uppercase;color:var(--text-1)}
+.sec-sub{font-size:12px;color:var(--text-3);margin-top:2px}
+section{margin-bottom:36px}
+/* ── CARDS ── */
+.card{background:var(--bg-card);border-radius:var(--r-lg);box-shadow:var(--sh);padding:20px;border:1px solid var(--border)}
+.card-navy{background:var(--navy);border-color:transparent;color:#fff}
+.card-navy .card-title{color:#fff}
+.card-navy .card-sub{color:rgba(255,255,255,.5)}
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+/* ── SEMANA CARD ── */
+.semana-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 32px}
+.semana-info{display:flex;flex-direction:column;gap:6px}
+.semana-label{font-size:12px;color:rgba(255,255,255,.45);letter-spacing:.5px;text-transform:uppercase}
+.semana-title{font-family:'Anton',sans-serif;font-size:22px;letter-spacing:.5px;color:#fff}
+.semana-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.canal-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.canal-ig{background:rgba(225,48,108,.15);color:#e1306c;border:1px solid rgba(225,48,108,.3)}
+.canal-li{background:rgba(0,119,181,.15);color:#0077B5;border:1px solid rgba(0,119,181,.3)}
+.semana-perf{display:flex;gap:24px}
+.perf-item{text-align:center}
+.perf-num{font-family:'Anton',sans-serif;font-size:26px;color:var(--gold)}
+.perf-lbl{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+/* ── SUGESTÃO CARD ── */
+.sug-card{background:var(--bg-card);border-radius:var(--r);padding:16px;border:1px solid var(--border);box-shadow:var(--sh);display:flex;flex-direction:column;gap:12px}
+.sug-badges{display:flex;flex-wrap:wrap;gap:6px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.badge-ig{background:rgba(225,48,108,.1);color:#e1306c}
+.badge-li{background:rgba(0,119,181,.1);color:#0077B5}
+.badge-alta{background:rgba(180,35,42,.1);color:var(--danger)}
+.badge-media{background:rgba(183,121,31,.1);color:var(--warn)}
+.badge-baixa{background:rgba(31,122,77,.1);color:var(--ok)}
+.badge-fmt{background:var(--bg-dim);color:var(--text-2)}
+.badge-icp{background:rgba(27,61,143,.08);color:var(--blue)}
+.sug-tema{font-size:13px;font-weight:600;color:var(--text-1);line-height:1.4}
+.sug-obj{font-size:11px;color:var(--text-3)}
+/* ── TABS ── */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:18px}
+.tab{padding:9px 18px;font-size:12px;font-weight:600;color:var(--text-3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;text-transform:uppercase;letter-spacing:.3px}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab:hover:not(.active){color:var(--text-1)}
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+/* ── CHIPS TEMAS ── */
+.chips-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;color:var(--text-2);background:var(--bg-soft);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.chip:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* ── FILTERS BAR ── */
+.filters-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.filter-select{padding:7px 12px;border-radius:8px;border:1px solid var(--border-md);background:var(--bg-card);color:var(--text-1);font-size:13px;font-family:inherit;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--gold)}
+/* ── CONTEUDOS TABLE ── */
+.ct-table{width:100%;border-collapse:collapse}
+.ct-table th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text-3);padding:8px 12px;border-bottom:1px solid var(--border)}
+.ct-table td{padding:12px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.ct-table tr:hover td{background:var(--bg-soft)}
+.status-badge{padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;display:inline-block}
+.sb-pronto{background:rgba(27,61,143,.1);color:var(--blue)}
+.sb-publicado{background:rgba(31,122,77,.1);color:var(--ok)}
+.sb-ideia{background:var(--bg-dim);color:var(--text-3)}
+.sb-producao{background:rgba(183,121,31,.1);color:var(--warn)}
+.sb-revisar{background:rgba(180,35,42,.1);color:var(--danger)}
+.sb-arquivado{background:var(--bg-dim);color:var(--text-3);opacity:.6}
+.action-btns{display:flex;align-items:center;gap:6px}
+/* ── CALENDARIO ── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.cal-day{background:var(--bg-card);border-radius:var(--r);border:1px solid var(--border);min-height:100px;display:flex;flex-direction:column;overflow:hidden}
+.cal-day-header{padding:8px 10px;background:var(--bg-soft);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.cal-day-name{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-3)}
+.cal-day-num{font-size:13px;font-weight:700;color:var(--text-1)}
+.cal-day.today .cal-day-header{background:rgba(184,138,42,.08)}
+.cal-day.today .cal-day-num{color:var(--gold)}
+.cal-entries{flex:1;padding:6px;display:flex;flex-direction:column;gap:4px}
+.cal-entry{padding:4px 7px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;transition:opacity .15s;line-height:1.3}
+.cal-entry:hover{opacity:.8}
+.cal-entry-ig{background:rgba(225,48,108,.1);color:#e1306c;border:1px solid rgba(225,48,108,.2)}
+.cal-entry-li{background:rgba(0,119,181,.1);color:#0077B5;border:1px solid rgba(0,119,181,.2)}
+.cal-add-btn{display:flex;align-items:center;justify-content:center;padding:4px;color:var(--text-3);background:none;border:none;cursor:pointer;border-radius:5px;font-size:14px;transition:all .15s}
+.cal-add-btn:hover{background:var(--bg-dim);color:var(--gold)}
+/* ── BIBLIOTECA ── */
+.bib-card{background:var(--bg-card);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--sh);padding:16px;display:flex;flex-direction:column;gap:12px}
+.bib-badges{display:flex;flex-wrap:wrap;gap:5px}
+.bib-title{font-size:13px;font-weight:700;color:var(--text-1);line-height:1.4}
+.bib-desc{font-size:12px;color:var(--text-2);line-height:1.5}
+.bib-actions{display:flex;gap:8px;margin-top:4px}
+/* ── KPI BAR ── */
+.kpi-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi-item{background:var(--bg-card);border-radius:var(--r);padding:16px;border:1px solid var(--border);box-shadow:var(--sh)}
+.kpi-num{font-family:'Anton',sans-serif;font-size:28px;color:var(--navy)}
+.kpi-lbl{font-size:11px;color:var(--text-3);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px;color:var(--text-3)}
+.empty-icon{font-size:32px;margin-bottom:10px}
+.empty-text{font-size:13px}
+/* ── MODAL OVERLAY ── */
+.modal-ov{position:fixed;inset:0;background:rgba(7,13,28,.6);z-index:900;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal{background:#fff;border-radius:var(--r-lg);box-shadow:var(--sh-lg);width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-lg{max-width:860px}
+.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-family:'Anton',sans-serif;font-size:16px;letter-spacing:.5px;color:var(--text-1)}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-3);padding:4px;border-radius:6px;line-height:1}
+.modal-close:hover{background:var(--bg-dim);color:var(--text-1)}
+.modal-body{padding:24px;overflow-y:auto;flex:1}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+/* ── WIZARD ── */
+.wizard-steps{display:flex;gap:0;margin-bottom:24px}
+.wizard-step{flex:1;text-align:center;position:relative}
+.wizard-step::after{content:'';position:absolute;top:14px;left:50%;right:-50%;height:2px;background:var(--border);z-index:0}
+.wizard-step:last-child::after{display:none}
+.ws-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:12px;font-weight:700;color:var(--text-3);background:#fff;position:relative;z-index:1;transition:all .2s}
+.wizard-step.done .ws-dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.wizard-step.active .ws-dot{background:var(--gold);border-color:var(--gold);color:#fff}
+.ws-label{font-size:10px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.3px}
+.wizard-step.active .ws-label{color:var(--gold)}
+.wizard-step.done .ws-label{color:var(--ok)}
+/* ── CANAL SELECTOR ── */
+.canal-opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.canal-opt{border:2px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;cursor:pointer;transition:all .15s}
+.canal-opt:hover{border-color:var(--gold-lt)}
+.canal-opt.selected{border-color:var(--gold);background:rgba(184,138,42,.05)}
+.canal-opt-icon{font-size:28px;margin-bottom:8px}
+.canal-opt-name{font-family:'Anton',sans-serif;font-size:14px;color:var(--text-1)}
+.canal-opt-desc{font-size:11px;color:var(--text-3);margin-top:4px}
+/* ── FORMATO OPTS ── */
+.formato-opts{display:flex;flex-wrap:wrap;gap:8px}
+.formato-opt{padding:8px 16px;border-radius:8px;border:1px solid var(--border-md);cursor:pointer;font-size:13px;font-weight:500;color:var(--text-2);background:var(--bg-soft);transition:all .15s}
+.formato-opt:hover{border-color:var(--gold-lt);color:var(--text-1)}
+.formato-opt.selected{background:var(--gold);color:#fff;border-color:var(--gold)}
+/* ── ICP / OBJETIVO OPTS ── */
+.grid-opts{display:flex;flex-wrap:wrap;gap:8px}
+.grid-opt{padding:7px 14px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:12px;font-weight:500;color:var(--text-2);background:var(--bg-card);transition:all .15s;line-height:1.3}
+.grid-opt:hover{border-color:var(--gold-lt);color:var(--text-1)}
+.grid-opt.selected{background:var(--navy);color:#fff;border-color:var(--navy)}
+/* ── TEMA STEP ── */
+.tema-input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border-md);font-size:14px;font-family:inherit;color:var(--text-1);resize:vertical;min-height:80px;transition:border .15s}
+.tema-input:focus{outline:none;border-color:var(--gold)}
+.tema-sug-label{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+/* ── RESULT ── */
+.result-block{margin-bottom:20px}
+.result-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.result-text{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--r);padding:14px;font-size:13px;color:var(--text-1);line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.result-copy-btn{font-size:11px;font-weight:600;color:var(--gold);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:5px;transition:background .15s}
+.result-copy-btn:hover{background:rgba(184,138,42,.1)}
+/* ── AGENTE CARD ── */
+.agente-card{background:var(--navy);border-radius:var(--r-lg);padding:22px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.agente-info{display:flex;align-items:center;gap:16px}
+.agente-avatar{width:52px;height:52px;border-radius:50%;background:rgba(184,138,42,.15);border:2px solid rgba(184,138,42,.4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.agente-nome{font-family:'Anton',sans-serif;font-size:20px;color:#fff;letter-spacing:.3px}
+.agente-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px}
+.agente-instrucao{font-size:12px;color:rgba(255,255,255,.6);margin-top:6px;background:rgba(255,255,255,.06);padding:6px 10px;border-radius:6px;display:inline-block}
+.btn-abrir-agente{background:var(--gold);color:#fff;border:none;padding:11px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;white-space:nowrap;font-family:inherit;transition:background .15s;text-decoration:none}
+.btn-abrir-agente:hover{background:var(--gold-lt)}
+/* ── PROMPT BOX ── */
+.prompt-box{background:var(--bg-soft);border:1px solid var(--border-md);border-radius:var(--r);padding:16px;font-size:12.5px;color:var(--text-1);line-height:1.8;white-space:pre-wrap;word-break:break-word;max-height:320px;overflow-y:auto;font-family:'Plus Jakarta Sans',sans-serif}
+.prompt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.prompt-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-3)}
+.btn-copy-prompt{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;background:var(--gold);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-copy-prompt:hover{background:var(--gold-lt)}
+/* ── PASSOS DO RESULTADO ── */
+.passos-instrucao{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-3);text-align:center;margin:4px 0 14px;padding:8px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.passo-card{background:#fff;border:1px solid var(--border-md);border-radius:var(--r-lg);padding:18px 20px;margin-bottom:14px}
+.passo-card+.passo-card{border-top:2px solid var(--gold)}
+.passo-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
+.passo-num{width:28px;height:28px;min-width:28px;border-radius:50%;background:var(--gold);color:#fff;font-weight:900;font-size:14px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.passo-titulo{font-weight:700;font-size:14px;color:var(--text-1);margin-bottom:3px}
+.passo-desc{font-size:12px;color:var(--text-2);line-height:1.5}
+.passo-copy-btn{margin-left:auto;flex-shrink:0}
+/* ── RASCUNHO TOGGLE ── */
+.rascunho-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-3);cursor:pointer;padding:10px 0;border-top:1px solid var(--border);margin-top:4px;user-select:none}
+.rascunho-toggle:hover{color:var(--text-1)}
+.rascunho-toggle .chevron{transition:transform .2s}
+.rascunho-toggle.open .chevron{transform:rotate(90deg)}
+.rascunho-body{display:none;padding-top:16px}
+.rascunho-body.open{display:block}
+/* ── BADGE AGENTE ── */
+.badge-bia{background:rgba(225,48,108,.1);color:#c42a6b;border:1px solid rgba(225,48,108,.2)}
+.badge-claudio{background:rgba(27,61,143,.1);color:var(--blue);border:1px solid rgba(27,61,143,.2)}
+.painel-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.painel-row:last-child{border-bottom:none}
+.painel-num{font-family:'Anton',sans-serif;font-size:16px;color:var(--gold);width:24px;flex-shrink:0}
+.painel-content{flex:1}
+.painel-txt{font-size:13px;color:var(--text-1);line-height:1.5}
+.painel-vis{font-size:11px;color:var(--text-3);margin-top:3px;font-style:italic}
+/* ── LOADING ── */
+.loading-spinner{display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--text-2)}
+/* ── TOAST ── */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;transition:all .3s;transform:translateY(80px);opacity:0}
+#toast.show{transform:translateY(0);opacity:1}
+/* ── FORM FIELDS ── */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+.field label{font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px}
+.field input,.field select,.field textarea{padding:10px 12px;border-radius:8px;border:1px solid var(--border-md);font-size:13px;font-family:inherit;color:var(--text-1);background:var(--bg-card);transition:border .15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:80px}
+/* ── MOBILE BAR ── */
+.mob-bar{display:none;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06)}
+.mob-title{font-family:'Anton',sans-serif;font-size:15px;color:#F4F1EC;text-transform:uppercase}
+.mob-menu-btn{background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:20px;padding:4px}
+.sb-ov{display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.5)}
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.grid-3{grid-template-columns:1fr 1fr}.kpi-bar{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  .sb{position:fixed;left:calc(var(--sb-w)*-1);top:0;bottom:0;z-index:801;transition:left .25s}
+  .sb.open{left:0}
+  .sb-ov.open{display:block}
+  .topbar{display:none}
+  .mob-bar{display:flex}
+  .content{padding:16px 16px 60px}
+  .semana-card{flex-direction:column;align-items:flex-start;padding:18px 20px}
+  .semana-perf{gap:16px}
+  .cal-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:640px){
+  .grid-3,.grid-2,.canal-opts{grid-template-columns:1fr}
+  .kpi-bar{grid-template-columns:1fr 1fr}
+  .modal{max-width:100%;max-height:95vh;border-radius:var(--r-lg) var(--r-lg) 0 0}
+  .modal-ov{align-items:flex-end;padding:0}
+  .cal-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+<script src="config.js"></script>
+</head>
+<body>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sb-ov" id="sb-ov" onclick="closeSb()"></div>
+
+<div id="app">
+<!-- ── SIDEBAR ── -->
+<aside class="sb" id="sb">
+  <div class="sb-brand">
+    <img src="eap_sidebar.png" alt="EAP"/>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Principal</div>
+    <a href="dashboard.html" class="sb-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      DASHBOARD
+    </a>
+    <a href="painel.html" class="sb-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      CENTRAL DE EXECUÇÃO
+    </a>
+    <a href="leads.html" class="sb-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      LEADS
+    </a>
+    <a href="marketing.html" class="sb-item active">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      MARKETING
+    </a>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-user">
+      <div class="sb-av-wrap" onclick="document.getElementById('sb-photo-inp').click()" title="Alterar foto">
+        <div class="sb-av" id="sb-av">—</div>
+        <img class="sb-av-img" id="sb-av-img" alt="" />
+        <div class="sb-av-overlay">📷</div>
+      </div>
+      <div class="sb-info">
+        <div class="sb-name" id="sb-nm">—</div>
+        <div class="sb-unit-lbl" id="sb-unit-lbl">—</div>
+      </div>
+      <button class="btn-logout" onclick="logout()" title="Sair"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </div>
+    <input type="file" id="sb-photo-inp" accept="image/*" style="display:none" onchange="handlePhoto(this)" />
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <div class="page-title">Marketing Local</div>
+      <div class="page-sub" id="topbar-sub">Produção de conteúdo para Instagram e LinkedIn</div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="loadPage()">↺ Atualizar</button>
+      <button class="btn btn-gold" onclick="openGenerator()">+ Gerar Conteúdo</button>
+    </div>
+  </div>
+
+  <!-- MOBILE BAR -->
+  <div class="mob-bar">
+    <button class="mob-menu-btn" onclick="openSb()">☰</button>
+    <span class="mob-title">Marketing Local</span>
+    <button class="btn btn-gold btn-sm" onclick="openGenerator()">+ Gerar</button>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="content">
+
+    <!-- ── TEMAS PARA INSTAGRAM ── -->
+    <section>
+      <div class="sec-header">
+        <div><div class="sec-title">Temas para Instagram</div><div class="sec-sub">Agente Cláudio · Clique em um tema para gerar o prompt</div></div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:38px;height:38px;border-radius:50%;background:rgba(225,48,108,.15);border:2px solid rgba(225,48,108,.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎨</div>
+            <div>
+              <div style="font-family:'Anton',sans-serif;font-size:16px;color:#fff;letter-spacing:.3px">Cláudio</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:1px">Especialista em Carrossel para Instagram</div>
+            </div>
+          </div>
+          <a href="https://chatgpt.com" target="_blank" rel="noopener" class="btn-abrir-agente" style="font-size:12px;padding:8px 14px">Abrir Cláudio ↗</a>
+        </div>
+        <div style="padding:16px 20px">
+          <div class="tabs" id="ig-tabs"></div>
+          <div id="ig-panes"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TEMAS PARA LINKEDIN ── -->
+    <section>
+      <div class="sec-header">
+        <div><div class="sec-title">Temas para LinkedIn</div><div class="sec-sub">Agente Bia · Clique em um tema para gerar o prompt</div></div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="background:var(--navy);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:38px;height:38px;border-radius:50%;background:rgba(0,119,181,.15);border:2px solid rgba(0,119,181,.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✍️</div>
+            <div>
+              <div style="font-family:'Anton',sans-serif;font-size:16px;color:#fff;letter-spacing:.3px">Bia</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.45);margin-top:1px">Especialista em Conteúdo para LinkedIn</div>
+            </div>
+          </div>
+          <a href="https://chatgpt.com" target="_blank" rel="noopener" class="btn-abrir-agente" style="font-size:12px;padding:8px 14px">Abrir Bia ↗</a>
+        </div>
+        <div style="padding:16px 20px">
+          <div class="tabs" id="li-tabs"></div>
+          <div id="li-panes"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CONTEÚDOS GERADOS ── -->
+    <section>
+      <div class="sec-header">
+        <div><div class="sec-title">Conteúdos gerados</div><div class="sec-sub">Copie, edite e marque como publicado</div></div>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="filters-bar" style="padding:16px 16px 0">
+          <select class="filter-select" id="filtro-canal" onchange="aplicarFiltros()">
+            <option value="">Todos os canais</option>
+            <option value="INSTAGRAM">Instagram</option>
+            <option value="LINKEDIN">LinkedIn</option>
+          </select>
+          <select class="filter-select" id="filtro-status" onchange="aplicarFiltros()">
+            <option value="">Todos os status</option>
+            <option value="PRONTO">Pronto</option>
+            <option value="PUBLICADO">Publicado</option>
+            <option value="IDEIA">Ideia</option>
+            <option value="EM_PRODUCAO">Em produção</option>
+            <option value="REVISAR">Revisar</option>
+          </select>
+        </div>
+        <div style="overflow-x:auto;padding:0 0 4px">
+          <table class="ct-table" id="ct-table">
+            <thead>
+              <tr>
+                <th>Tema</th>
+                <th>Canal</th>
+                <th>Agente</th>
+                <th>Status</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="ct-tbody"></tbody>
+          </table>
+        </div>
+        <div id="ct-empty" class="empty" style="display:none"><div class="empty-icon">📝</div><div class="empty-text">Nenhum conteúdo gerado ainda. Clique em "Gerar Conteúdo" para começar.</div></div>
+      </div>
+    </section>
+
+
+    <!-- ── PERFORMANCE ── -->
+    <section>
+      <div class="sec-header">
+        <div><div class="sec-title">Performance</div><div class="sec-sub">Resumo da sua produção de conteúdo</div></div>
+      </div>
+      <div class="kpi-bar" id="kpi-bar">
+        <div class="kpi-item"><div class="kpi-num" id="kpi-prod">—</div><div class="kpi-lbl">Conteúdos produzidos</div></div>
+        <div class="kpi-item"><div class="kpi-num" id="kpi-pub">—</div><div class="kpi-lbl">Publicados</div></div>
+        <div class="kpi-item"><div class="kpi-num" id="kpi-pend">—</div><div class="kpi-lbl">Pendentes</div></div>
+        <div class="kpi-item"><div class="kpi-num" id="kpi-canal">—</div><div class="kpi-lbl">Canal mais ativo</div></div>
+      </div>
+    </section>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL — GERADOR DE CONTEÚDO (wizard 5 passos)
+═══════════════════════════════════════════════════════════ -->
+<div class="modal-ov" id="gen-modal-ov">
+<div class="modal modal-lg">
+  <div class="modal-header">
+    <div class="modal-title">Gerador de Conteúdo</div>
+    <button class="modal-close" onclick="closeGenModal()">✕</button>
+  </div>
+  <div class="modal-body" id="gen-modal-body">
+    <!-- renderizado via JS -->
+  </div>
+  <div class="modal-footer" id="gen-modal-footer">
+    <button class="btn btn-outline" id="gen-btn-back" onclick="genBack()" style="display:none">← Voltar</button>
+    <div style="display:flex;gap:10px;margin-left:auto">
+      <button class="btn btn-outline" onclick="closeGenModal()">Cancelar</button>
+      <button class="btn btn-gold" id="gen-btn-next" onclick="genNext()">Próximo →</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL — VISUALIZAR CONTEÚDO
+═══════════════════════════════════════════════════════════ -->
+<div class="modal-ov" id="content-modal-ov">
+<div class="modal modal-lg">
+  <div class="modal-header">
+    <div class="modal-title" id="content-modal-title">Conteúdo Gerado</div>
+    <button class="modal-close" onclick="closeContentModal()">✕</button>
+  </div>
+  <div class="modal-body" id="content-modal-body"></div>
+  <div class="modal-footer" id="content-modal-footer">
+    <select class="filter-select" id="content-status-sel" onchange="updateContentStatus()" style="max-width:160px">
+      <option value="IDEIA">Ideia</option>
+      <option value="EM_PRODUCAO">Em produção</option>
+      <option value="PRONTO">Pronto</option>
+      <option value="PUBLICADO">Publicado</option>
+      <option value="REVISAR">Revisar</option>
+    </select>
+    <div style="display:flex;gap:8px;margin-left:auto">
+      <button class="btn btn-outline btn-sm" onclick="copyAllContent()">Copiar tudo</button>
+      <button class="btn btn-gold btn-sm" onclick="marcarPublicado()">✓ Marcar como publicado</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MODAL — CALENDÁRIO
+═══════════════════════════════════════════════════════════ -->
+<div class="modal-ov" id="cal-modal-ov">
+<div class="modal">
+  <div class="modal-header">
+    <div class="modal-title" id="cal-modal-title">Adicionar ao Calendário</div>
+    <button class="modal-close" onclick="closeCalModal()">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="field">
+      <label>Data</label>
+      <input type="date" id="cal-data"/>
+    </div>
+    <div class="grid-2" style="gap:12px">
+      <div class="field" style="margin:0">
+        <label>Canal</label>
+        <select id="cal-canal">
+          <option value="INSTAGRAM">Instagram</option>
+          <option value="LINKEDIN">LinkedIn</option>
+        </select>
+      </div>
+      <div class="field" style="margin:0">
+        <label>Formato</label>
+        <select id="cal-formato">
+          <option value="">— Selecione —</option>
+          <option value="CARROSSEL">Carrossel</option>
+          <option value="LEGENDA">Legenda / Post</option>
+          <option value="REELS">Reels</option>
+          <option value="POST_TECNICO">Post Técnico (LinkedIn)</option>
+          <option value="POST_AUTORIDADE">Post de Autoridade</option>
+          <option value="POST_DIAGNOSTICO">Post Diagnóstico</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Tema / Assunto</label>
+      <input type="text" id="cal-tema" placeholder="Descreva o tema do post..."/>
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <select id="cal-status">
+        <option value="IDEIA">Ideia</option>
+        <option value="EM_PRODUCAO">Em produção</option>
+        <option value="PRONTO">Pronto</option>
+        <option value="PUBLICADO">Publicado</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Observações</label>
+      <textarea id="cal-obs" placeholder="Notas adicionais..."></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline" onclick="closeCalModal()">Cancelar</button>
+    <button class="btn btn-gold" onclick="saveCalEntry()">Salvar</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// CONFIG & ESTADO
+// ─────────────────────────────────────────────────────────────
+const API = window.EAP_API || 'http://localhost:3333'
+
+const S = {
+  token: localStorage.getItem('eap_t') || '',
+  user: JSON.parse(localStorage.getItem('eap_u') || 'null'),
+  resumo: null,
+  temas: {},
+  biblioteca: [],
+  conteudos: [],
+  calendario: [],
+  filtros: { canal: '', status: '' },
+  // wizard
+  genStep: 1,
+  genData: {},
+  genResult: null,
+  genResultId: null,
+  genError: null,
+  // content modal
+  activeContentId: null,
+  activeContent: null,
+  // calendar modal
+  calEditId: null,
+  calPrefillDate: null,
+}
+
+const ICP_LABELS = {
+  OBRAS_PUBLICAS: 'Obras Públicas', ALTO_PADRAO: 'Alto Padrão',
+  INCORPORADORAS: 'Incorporadoras', MULTIPLAS_OBRAS: 'Múltiplas Obras',
+  DONOS: 'Donos de Construtora', DIRETORES: 'Diretores',
+  GESTORES: 'Gestores de Obra', ENGENHEIROS: 'Engenheiros Civis',
+  ENGENHEIROS_CIVIS: 'Engenheiros Civis', ALTO_VGV: 'Alto VGV',
+  DOR_OPERACIONAL: 'Gargalo Operacional',
+}
+const OBJ_LABELS = {
+  GERAR_AUTORIDADE: 'Gerar autoridade', EDUCAR_MERCADO: 'Educar mercado',
+  ATRAIR_LEAD: 'Atrair lead', GERAR_DIRETO: 'Gerar direto',
+  CONVIDAR_DIAGNOSTICO: 'Convidar diagnóstico', MOSTRAR_ROTINA: 'Mostrar rotina',
+  MOSTRAR_DIFERENCIAL: 'Mostrar diferencial', QUEBRAR_OBJECAO: 'Quebrar objeção',
+  FILTRAR_PUBLICO: 'Filtrar público', RECONHECIMENTO_LOCAL: 'Reconhecimento local',
+}
+const FMT_LABELS = {
+  CARROSSEL:'Carrossel', LEGENDA:'Legenda', REELS:'Reels',
+  POST_TECNICO:'Post Técnico', POST_AUTORIDADE:'Post Autoridade',
+  POST_DIAGNOSTICO:'Post Diagnóstico', POST_OPINIAO:'Post Opinião',
+  POST_DADO:'Post com Dado', POST_ROTINA:'Post Rotina', POST_CASE:'Post Case',
+  POST_INSTITUCIONAL:'Post Institucional', BASTIDOR:'Bastidor', PROVA_TECNICA:'Prova Técnica',
+}
+const FORMATOS_IG = ['CARROSSEL','LEGENDA','REELS','POST_INSTITUCIONAL','BASTIDOR','PROVA_TECNICA']
+const FORMATOS_LI = ['POST_TECNICO','POST_AUTORIDADE','POST_DIAGNOSTICO','POST_OPINIAO','POST_DADO','POST_ROTINA','POST_CASE']
+
+// ─────────────────────────────────────────────────────────────
+// API HELPER
+// ─────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Authorization': `Bearer ${S.token}`, 'Content-Type': 'application/json' },
+  }
+  if (body) opts.body = JSON.stringify(body)
+  const res = await fetch(API + path, opts)
+  if (res.status === 401) { localStorage.clear(); location.href='painel.html'; return null }
+  return res.json()
+}
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+function getFname(){return localStorage.getItem('eap_fname')||S.user?.nome||'Franqueado';}
+function setPhoto(src){const img=document.getElementById('sb-av-img');const av=document.getElementById('sb-av');if(!img)return;img.src=src;img.style.display='block';if(av)av.style.display='none';}
+function handlePhoto(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{localStorage.setItem('eap_photo',e.target.result);setPhoto(e.target.result);};r.readAsDataURL(f);}
+function getUnitLabel(u){const m={'São Paulo':'SP','Rio de Janeiro':'RJ','Belo Horizonte':'MG','Curitiba':'PR','Porto Alegre':'RS','Salvador':'BA','Fortaleza':'CE','Recife':'PE','Manaus':'AM','Goiânia':'GO','Brasília':'DF','Campinas':'SP','Florianópolis':'SC'};const st=m[u.cidade]||'';return'Unidade '+u.cidade+(st?' - '+st:'');}
+
+// ─── TEMAS ESTÁTICOS POR ICP ─────────────────────────────────────────────────
+
+const TEMAS_IG = {
+  OBRAS_PUBLICAS: [
+    'Por que obra pública sem controle de medição atrasa o recebimento',
+    '3 erros no fluxo de caixa de construtoras em obra pública',
+    'Como antecipar desvios de prazo antes de virar multa no contrato',
+    'Obra pública: o que controlar para não perder margem em aditivo',
+    'Rotina semanal de controle em obra pública — o que monitorar',
+  ],
+  ALTO_PADRAO: [
+    '3 sinais de que sua obra de alto padrão está drenando margem',
+    'Como gerenciar suprimentos em obra de personalização alta sem atrasar',
+    'O que o cliente percebe quando o canteiro está desorganizado',
+    'Por que obra residencial premium exige planejamento mais rigoroso',
+    'Como medir rentabilidade por unidade antes do fim da obra',
+  ],
+  INCORPORADORAS: [
+    'Por que incorporadora que não controla custo por contrato perde margem',
+    'Como separar fluxo de caixa de obra e fluxo da empresa',
+    'Onde a incorporadora perde dinheiro entre viabilidade e execução',
+    '3 indicadores que toda incorporadora deveria acompanhar por empreendimento',
+    'Como estruturar controle para acessar crédito com mais facilidade',
+  ],
+  MULTIPLAS_OBRAS: [
+    'Você sabe qual canteiro está te dando lucro e qual está drenando?',
+    'Como padronizar processos em 3 obras sem depender de memória da equipe',
+    'Por que construtora com 12 obras pode faturar mais e lucrar menos',
+    '4 erros de gestão que aparecem quando você tem mais de 2 obras rodando',
+    'Como identificar onde o dinheiro sai antes que vire problema',
+  ],
+  ENGENHEIROS: [
+    'O engenheiro que entende de resultado é mais valorizado que o que só resolve obra',
+    'Como apresentar custo e prazo para o dono sem parecer fora de controle',
+    'Rotina de acompanhamento semanal: o que anotar e o que monitorar',
+    '3 momentos em que o engenheiro precisa decidir rápido — como se preparar',
+    'Por que engenheiro com método cresce de cargo mais rápido',
+  ],
+  DONOS: [
+    'Faturamento não é lucro — e sua construtora pode estar provando isso agora',
+    'Como saber se sua operação está saudável sem esperar o fechamento',
+    'O que acontece quando construtoras crescem sem estrutura de controle',
+    'Decisão com dado vs decisão no feeling — qual é o seu padrão hoje',
+    'Por que crescer faturamento sem crescer controle é perigoso',
+  ],
+  GESTORES: [
+    'Como montar rotina de acompanhamento que antecipa problemas',
+    'Gestor de obra que não gera relatório claro perde credibilidade com o dono',
+    'Como priorizar ações quando tudo parece urgente no canteiro',
+    '3 indicadores que todo gestor de obras deveria acompanhar por semana',
+    'Como comunicar desvio de prazo sem perder a confiança do cliente',
+  ],
+  DOR_OPERACIONAL: [
+    'Quando a obra vira reativa: como sair do modo apaga-incêndio',
+    'O gargalo operacional que todo dono de construtora enfrenta mas não vê',
+    'Como organizar a operação sem contratar mais gente',
+    'Por que compra emergencial é sintoma — e qual é a doença real',
+    'Rotina ou improvisação: qual é o padrão da sua operação hoje',
+  ],
+}
+
+const TEMAS_LI = {
+  OBRAS_PUBLICAS: [
+    'Obra pública e fluxo de caixa: o que quem acerta aprende na prática',
+    'Como construtoras em obras públicas antecipam atrasos de pagamento com método',
+    'Controle de medição: o diferencial das construtoras que crescem em obra pública',
+    'Por que a margem em obra pública é decidida antes de assinar o contrato',
+    'Licitação ganha, obra perdida: o padrão que ninguém quer ver mas todo mundo conhece',
+  ],
+  ALTO_PADRAO: [
+    'O que construtoras de alto padrão fazem diferente na gestão de obra',
+    'Rentabilidade em obra residencial premium: onde está a margem e onde ela some',
+    'Como estruturar controle em obra de personalização sem criar caos na equipe',
+    'O cliente de alto padrão vê mais que o produto — ele vê o processo',
+    'Crescer em residencial de alto padrão exige controle proporcional ao nível do produto',
+  ],
+  INCORPORADORAS: [
+    'Incorporadora sem controle por empreendimento: como o lucro some antes do habite-se',
+    'Acesso a crédito na incorporação: o que fundos e bancos analisam antes de aprovar',
+    'Como separar saúde financeira da obra da saúde da empresa — e por que importa',
+    'Viabilidade aprovada não é margem garantida — o que muda na execução',
+    'Estrutura de controle que prepara a incorporadora para a próxima captação',
+  ],
+  MULTIPLAS_OBRAS: [
+    'Como identificar qual obra está drenando margem antes que seja tarde',
+    'Padronização de processo em múltiplos canteiros: método, não improvisação',
+    'Por que construtoras com 5+ obras precisam de visibilidade, não de mais reuniões',
+    'O modelo de gestão que permite crescer de 3 para 10 obras sem perder controle',
+    'Cada obra é um negócio — e você precisa saber o resultado de cada uma',
+  ],
+  ENGENHEIROS: [
+    'O engenheiro que domina dado e resultado tem mais impacto que o que domina só técnica',
+    'Como apresentar desvio de prazo com dados sem parecer que perdeu o controle',
+    'Engenheiro de obra e gestão de resultado: a combinação que o mercado paga mais',
+    'Por que rotina de acompanhamento é a principal habilidade do engenheiro moderno',
+    'Da execução para a estratégia: o caminho que os melhores engenheiros percorrem',
+  ],
+  DONOS: [
+    'O dono que não sabe onde está o dinheiro toma decisão no feeling',
+    'Crescer a empresa sem crescer o controle: o risco que ninguém calcula até ser tarde',
+    'Como saber se sua construtora está saudável sem esperar o fechamento do mês',
+    'R$50M faturados, 12 obras e prejuízo: o que esse caso ensina sobre controle',
+    'O que diferencia o dono que constrói patrimônio do que constrói volume',
+  ],
+  GESTORES: [
+    'Como criar rotina de acompanhamento que antecipa — não reage',
+    'O gestor que gera relatório claro protege seu cargo e constrói carreira',
+    'Priorização em canteiro: o que fazer quando tudo parece urgente ao mesmo tempo',
+    'Como transformar dado de obra em tomada de decisão sem travar a operação',
+    'O gestor que treina método libera tempo do dono — e se torna indispensável',
+  ],
+  DOR_OPERACIONAL: [
+    'Modo apaga-incêndio: como identificar que sua operação entrou nele — e como sair',
+    'O gargalo operacional que cresce escondido enquanto a obra avança',
+    'Compra emergencial não é problema de suprimento — é sintoma de falta de planejamento',
+    'Como sair da dependência de experiência e memória para processo e dado',
+    'Rotina ou improviso: o que o modelo operacional da sua empresa realmente diz',
+  ],
+}
+
+const TEMAS_ORDER_MKTG = [
+  ['OBRAS_PUBLICAS','Obras Públicas'],['ALTO_PADRAO','Alto Padrão'],
+  ['INCORPORADORAS','Incorporadoras'],['MULTIPLAS_OBRAS','Múltiplas Obras'],
+  ['ENGENHEIROS','Engenheiros'],['DONOS','Donos'],['GESTORES','Gestores'],
+  ['DOR_OPERACIONAL','Gargalo Operacional'],
+]
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+
+async function loadPage() {
+  if (!S.token) { location.href = 'painel.html'; return }
+  if (S.user) {
+    const ini = S.user.nome.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()
+    const av = document.getElementById('sb-av')
+    if (av) av.textContent = ini
+    const nm = document.getElementById('sb-nm')
+    if (nm) nm.textContent = getFname()
+    const ul = document.getElementById('sb-unit-lbl')
+    if (ul) ul.textContent = getUnitLabel(S.user)
+    const photo = localStorage.getItem('eap_photo')
+    if (photo) setPhoto(photo)
+  }
+  renderTemasBloco('ig', TEMAS_IG, 'INSTAGRAM')
+  renderTemasBloco('li', TEMAS_LI, 'LINKEDIN')
+  const conteudos = await api('GET', '/marketing/conteudos?status=')
+  if (conteudos) { S.conteudos = conteudos; renderConteudos(); renderPerfFromConteudos(conteudos) }
+}
+
+// ─────────────────────────────────────────────────────────────
+// RENDER TEMAS IG / LI
+// ─────────────────────────────────────────────────────────────
+function renderTemasBloco(prefix, temas, canal) {
+  const tabsEl = document.getElementById(prefix + '-tabs')
+  const panesEl = document.getElementById(prefix + '-panes')
+  if (!tabsEl || !panesEl) return
+  tabsEl.innerHTML = TEMAS_ORDER_MKTG.map(([k, label], i) => `
+    <div class="tab ${i === 0 ? 'active' : ''}" onclick="switchTemasTab('${prefix}','${k}',this)">${label}</div>
+  `).join('')
+  panesEl.innerHTML = TEMAS_ORDER_MKTG.map(([k], i) => {
+    const chips = (temas[k] || []).map((t, ti) => {
+      const kt = prefix + '_' + k + '_' + ti
+      _CB[kt] = JSON.stringify({ tema: t, icp: k, canal })
+      return `<div class="chip" onclick="_openGenFromBuf('${kt}')">${t}</div>`
+    }).join('')
+    return `<div class="tab-pane ${i === 0 ? 'active' : ''}" id="${prefix}-pane-${k}"><div class="chips-wrap">${chips}</div></div>`
+  }).join('')
+}
+
+function switchTemasTab(prefix, icp, el) {
+  const card = el.closest('.card')
+  card.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+  card.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'))
+  el.classList.add('active')
+  const pane = document.getElementById(prefix + '-pane-' + icp)
+  if (pane) pane.classList.add('active')
+}
+
+function renderTemasIg() { renderTemasBloco('ig', TEMAS_IG, 'INSTAGRAM') }
+function renderTemasLi()  { renderTemasBloco('li', TEMAS_LI, 'LINKEDIN')  }
+
+// ─────────────────────────────────────────────────────────────
+// PERFORMANCE (calculada a partir dos conteúdos)
+// ─────────────────────────────────────────────────────────────
+function renderPerfFromConteudos(lista) {
+  const ativos = lista.filter(c => c.status !== 'ARQUIVADO')
+  const pub  = ativos.filter(c => c.status === 'PUBLICADO').length
+  const pend = ativos.filter(c => c.status !== 'PUBLICADO').length
+  const canais = ativos.reduce((acc, c) => { acc[c.canal] = (acc[c.canal]||0)+1; return acc }, {})
+  const top = Object.entries(canais).sort((a,b) => b[1]-a[1])[0]?.[0]
+  const topLbl = top === 'INSTAGRAM' ? 'Instagram' : top === 'LINKEDIN' ? 'LinkedIn' : top || '—'
+  const set = (id, v) => { const el=document.getElementById(id); if(el) el.textContent=v }
+  set('kpi-prod', ativos.length)
+  set('kpi-pub',  pub)
+  set('kpi-pend', pend)
+  set('kpi-canal',topLbl)
+}
+
+// ─────────────────────────────────────────────────────────────
+// RENDER CONTEÚDOS
+// ─────────────────────────────────────────────────────────────
+function statusClass(s) {
+  const m = {PRONTO:'sb-pronto',PUBLICADO:'sb-publicado',IDEIA:'sb-ideia',
+    EM_PRODUCAO:'sb-producao',REVISAR:'sb-revisar',ARQUIVADO:'sb-arquivado'}
+  return m[s] || 'sb-ideia'
+}
+function statusLabel(s) {
+  const m = {PRONTO:'Pronto',PUBLICADO:'Publicado',IDEIA:'Ideia',
+    EM_PRODUCAO:'Em produção',REVISAR:'Revisar',ARQUIVADO:'Arquivado'}
+  return m[s] || s
+}
+function fmtDate(d) {
+  if (!d) return '—'
+  return new Date(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})
+}
+
+function aplicarFiltros() {
+  S.filtros.canal = document.getElementById('filtro-canal').value
+  S.filtros.status = document.getElementById('filtro-status').value
+  renderConteudos()
+}
+
+function renderConteudos() {
+  const tbody = document.getElementById('ct-tbody')
+  const empty = document.getElementById('ct-empty')
+  let lista = S.conteudos.filter(c => c.status !== 'ARQUIVADO')
+  if (S.filtros.canal) lista = lista.filter(c => c.canal === S.filtros.canal)
+  if (S.filtros.status) lista = lista.filter(c => c.status === S.filtros.status)
+  if (lista.length === 0) {
+    tbody.innerHTML = ''
+    empty.style.display = 'block'
+    return
+  }
+  empty.style.display = 'none'
+  tbody.innerHTML = lista.map(c => {
+    const ag = c.conteudo?.agente
+    const agBadge = ag
+      ? `<span class="badge ${ag.nome === 'Bia' ? 'badge-bia' : 'badge-claudio'}">${ag.emoji || '🤖'} ${ag.nome}</span>`
+      : `<span style="font-size:11px;color:var(--text-3)">—</span>`
+    const agBtn = ag
+      ? `<a class="btn btn-outline btn-sm" href="${ag.link}" target="_blank" rel="noopener">Abrir ${ag.nome}</a>`
+      : ''
+    return `
+    <tr>
+      <td style="max-width:240px"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.tema}</div></td>
+      <td>${c.canal === 'INSTAGRAM' ? '<span class="badge badge-ig">📷 IG</span>' : '<span class="badge badge-li">💼 LI</span>'}</td>
+      <td>${agBadge}</td>
+      <td><span class="status-badge ${statusClass(c.status)}">${statusLabel(c.status)}</span></td>
+      <td style="color:var(--text-3);font-size:12px">${fmtDate(c.criadoEm)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-outline btn-sm" onclick="openContentModal('${c.id}')">Ver</button>
+          <button class="btn btn-copy-prompt btn-sm" onclick="copiarPrompt('${c.id}')">📋 Prompt</button>
+          ${agBtn}
+          ${c.status !== 'PUBLICADO' ? `<button class="btn btn-gold btn-sm" onclick="quickPublicar('${c.id}')">✓</button>` : ''}
+          <button class="btn btn-outline btn-sm" style="color:var(--danger);border-color:currentColor" onclick="arquivarConteudo('${c.id}')">×</button>
+        </div>
+      </td>
+    </tr>`
+  }).join('')
+}
+
+// ─────────────────────────────────────────────────────────────
+// RENDER CALENDÁRIO
+// ─────────────────────────────────────────────────────────────
+const DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+function renderCalendario() {
+  const grid = document.getElementById('cal-grid')
+  const hoje = new Date()
+  const inicioSemana = new Date(hoje)
+  inicioSemana.setDate(hoje.getDate() - hoje.getDay())
+  inicioSemana.setHours(0,0,0,0)
+  const dias = []
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(inicioSemana)
+    d.setDate(inicioSemana.getDate() + i)
+    dias.push(d)
+  }
+  grid.innerHTML = dias.map(d => {
+    const isoDate = d.toISOString().split('T')[0]
+    const isHoje = d.toDateString() === hoje.toDateString()
+    const entradasDia = S.calendario.filter(e => {
+      const ed = new Date(e.data)
+      return ed.toDateString() === d.toDateString()
+    })
+    const entradasHtml = entradasDia.map(e => `
+      <div class="cal-entry ${e.canal === 'INSTAGRAM' ? 'cal-entry-ig' : 'cal-entry-li'}" onclick="openCalEntradaModal('${e.id}')">
+        ${e.tema.slice(0, 40)}${e.tema.length > 40 ? '…' : ''}
+      </div>
+    `).join('')
+    return `
+      <div class="cal-day ${isHoje ? 'today' : ''}">
+        <div class="cal-day-header">
+          <span class="cal-day-name">${DIAS[d.getDay()]}</span>
+          <span class="cal-day-num">${d.getDate()}</span>
+          <button class="cal-add-btn" onclick="openCalModal('${isoDate}')" title="Adicionar">+</button>
+        </div>
+        <div class="cal-entries">${entradasHtml}</div>
+      </div>
+    `
+  }).join('')
+}
+
+// ─────────────────────────────────────────────────────────────
+// RENDER BIBLIOTECA
+// ─────────────────────────────────────────────────────────────
+function renderBiblioteca() {
+  const grid = document.getElementById('bib-grid')
+  grid.innerHTML = S.biblioteca.map((item, idx) => {
+    // Armazena no buffer para evitar JSON inline em onclick
+    const kUsar = 'bib_usar_' + idx
+    const kVer  = 'bib_ver_'  + idx
+    _CB[kUsar] = JSON.stringify(item)
+    _CB[kVer]  = JSON.stringify(item)
+    return `
+    <div class="bib-card">
+      <div class="bib-badges">
+        ${item.canal === 'INSTAGRAM' ? '<span class="badge badge-ig">📷 Instagram</span>' : '<span class="badge badge-li">💼 LinkedIn</span>'}
+        <span class="badge badge-fmt">${FMT_LABELS[item.formato] || item.formato}</span>
+        <span class="badge badge-icp">${ICP_LABELS[item.icp] || item.icp}</span>
+      </div>
+      <div class="bib-title">${item.titulo}</div>
+      <div class="bib-desc">${item.descricao}</div>
+      <div class="bib-actions">
+        <button class="btn btn-gold btn-sm" onclick="_useBibFromBuf('${kUsar}')">Usar conteúdo</button>
+        <button class="btn btn-outline btn-sm" onclick="_verBibFromBuf('${kVer}')">Ver completo</button>
+      </div>
+    </div>`
+  }).join('')
+}
+function _verBibFromBuf(key) {
+  try { verBibItem(JSON.parse(_CB[key] || '{}')) } catch(e) {}
+}
+function usarBibliotecaItem(item) {
+  openGenerator({ canal: item.canal, formato: item.formato, icp: item.icp, objetivo: item.objetivo })
+}
+function verBibItem(item) {
+  const ov = document.getElementById('content-modal-ov')
+  const body = document.getElementById('content-modal-body')
+  const title = document.getElementById('content-modal-title')
+  const footer = document.getElementById('content-modal-footer')
+  title.textContent = item.titulo
+  footer.style.display = 'none'
+  // Usa buffer para evitar JSON inline em onclick
+  const k1 = 'cb' + (++_cbIdx); _CB[k1] = item.conteudoBase
+  const k2 = 'cb' + (++_cbIdx); _CB[k2] = JSON.stringify(item)
+  body.innerHTML = `
+    <div class="result-block">
+      <div class="result-label">Conteúdo-base <button class="result-copy-btn" onclick="_copyBuf('${k1}')">Copiar</button></div>
+      <div class="result-text">${escHtml(item.conteudoBase)}</div>
+    </div>
+    <div class="result-block">
+      <div class="result-label">CTA</div>
+      <div class="result-text">${escHtml(item.cta)}</div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-gold btn-sm" onclick="_useBibFromBuf('${k2}')">Usar como base para gerar conteúdo</button>
+    </div>
+  `
+  ov.classList.add('open')
+  S.activeContentId = null
+}
+function _useBibFromBuf(key) {
+  try {
+    const item = JSON.parse(_CB[key] || '{}')
+    usarBibliotecaItem(item)
+    closeContentModal()
+  } catch(e) {}
+}
+function _openGenFromBuf(key) {
+  try { openGenerator(JSON.parse(_CB[key] || 'null')) } catch(e) {}
+}
+
+// ─────────────────────────────────────────────────────────────
+// GENERATOR WIZARD
+// ─────────────────────────────────────────────────────────────
+function openGenerator(prefill) {
+  S.genData = prefill ? { ...prefill } : {}
+  S.genResult = null
+  S.genResultId = null
+  S.genError = null
+  // Se canal, ICP e formato estão definidos → pula direto para Objetivo (step 4)
+  // Se canal e ICP estão definidos mas não formato (chips de tema) → vai para Formato (step 2)
+  // Se só canal está definido → vai para Formato (step 2)
+  // Sem nada → wizard completo (step 1)
+  if (S.genData.canal && S.genData.icp && S.genData.formato) {
+    S.genStep = 4  // tudo pré-preenchido → Objetivo
+  } else if (S.genData.canal) {
+    S.genStep = 2  // canal (e/ou icp) pré-preenchido, mas formato ainda não → Formato
+  } else {
+    S.genStep = 1  // wizard completo
+  }
+  renderGenStep()
+  document.getElementById('gen-modal-ov').classList.add('open')
+}
+function closeGenModal() {
+  document.getElementById('gen-modal-ov').classList.remove('open')
+  if (S.genResult) {
+    reloadConteudos()
+  }
+}
+async function reloadConteudos() {
+  const c = await api('GET', '/marketing/conteudos?status=')
+  if (c) { S.conteudos = c; renderConteudos(); renderPerfFromConteudos(c) }
+}
+
+function renderGenStep() {
+  const body = document.getElementById('gen-modal-body')
+  const btnBack = document.getElementById('gen-btn-back')
+  const btnNext = document.getElementById('gen-btn-next')
+  const _minStep = (S.genData.canal && S.genData.icp && S.genData.formato) ? 4 : S.genData.canal ? 2 : 1
+  btnBack.style.display = S.genStep > _minStep && S.genStep < 6 ? 'block' : 'none'
+  // Step 6 = resultado, step 7 = imagemPrompt
+  if (S.genStep === 6) {
+    btnNext.textContent = 'Fechar'
+    btnNext.onclick = closeGenModal
+  } else if (S.genStep === 5) {
+    btnNext.textContent = '✨ Gerar conteúdo'
+    btnNext.onclick = genNext
+  } else {
+    btnNext.textContent = 'Próximo →'
+    btnNext.onclick = genNext
+  }
+
+  const steps = [
+    {label:'Canal',icon:'📡'},{label:'Formato',icon:'📄'},{label:'ICP',icon:'🎯'},
+    {label:'Objetivo',icon:'🏆'},{label:'Tema',icon:'✏️'},{label:'Resultado',icon:'✅'},
+  ]
+  // Steps pré-preenchidos pelo contexto (clique em chip de IG/LI) são marcados como done
+  const _preSteps = new Set()
+  if (S.genData.canal) _preSteps.add(1)
+  if (S.genData.icp)   _preSteps.add(3)
+  const wizardHtml = `
+    <div class="wizard-steps">
+      ${steps.map((s,i) => {
+        const stepN = i+1
+        const isDone = stepN < S.genStep || _preSteps.has(stepN)
+        const isActive = stepN === S.genStep
+        return `
+        <div class="wizard-step ${isDone ? 'done' : isActive ? 'active' : ''}">
+          <div class="ws-dot">${isDone ? '✓' : stepN}</div>
+          <div class="ws-label">${s.label}</div>
+        </div>`
+      }).join('')}
+    </div>
+  `
+
+  let stepContent = ''
+  if (S.genStep === 1) stepContent = renderStepCanal()
+  else if (S.genStep === 2) stepContent = renderStepFormato()
+  else if (S.genStep === 3) stepContent = renderStepIcp()
+  else if (S.genStep === 4) stepContent = renderStepObjetivo()
+  else if (S.genStep === 5) stepContent = renderStepTema()
+  else if (S.genStep === 6) stepContent = renderStepResultado()
+
+  body.innerHTML = wizardHtml + stepContent
+}
+
+function renderStepCanal() {
+  const sel = S.genData.canal
+  return `
+    <div style="margin-bottom:10px;font-size:13px;color:var(--text-2)">Escolha o canal para o conteúdo:</div>
+    <div class="canal-opts">
+      <div class="canal-opt ${sel === 'INSTAGRAM' ? 'selected' : ''}" onclick="selectCanal('INSTAGRAM',this)">
+        <div class="canal-opt-icon">📷</div>
+        <div class="canal-opt-name">Instagram</div>
+        <div class="canal-opt-desc">Carrossel, Legenda, Reels, Post</div>
+      </div>
+      <div class="canal-opt ${sel === 'LINKEDIN' ? 'selected' : ''}" onclick="selectCanal('LINKEDIN',this)">
+        <div class="canal-opt-icon">💼</div>
+        <div class="canal-opt-name">LinkedIn</div>
+        <div class="canal-opt-desc">Post técnico, Autoridade, Diagnóstico, Opinião</div>
+      </div>
+    </div>
+  `
+}
+function selectCanal(canal, el) {
+  document.querySelectorAll('.canal-opt').forEach(e => e.classList.remove('selected'))
+  el.classList.add('selected')
+  S.genData.canal = canal
+}
+
+function renderStepFormato() {
+  const canal = S.genData.canal || 'INSTAGRAM'
+  const formatos = canal === 'INSTAGRAM' ? FORMATOS_IG : FORMATOS_LI
+  const sel = S.genData.formato
+  return `
+    <div style="margin-bottom:12px;font-size:13px;color:var(--text-2)">Selecione o formato para <strong>${canal === 'INSTAGRAM' ? 'Instagram' : 'LinkedIn'}</strong>:</div>
+    <div class="formato-opts">
+      ${formatos.map(f => `
+        <div class="formato-opt ${sel === f ? 'selected' : ''}" onclick="selectFormato('${f}',this)">${FMT_LABELS[f] || f}</div>
+      `).join('')}
+    </div>
+  `
+}
+function selectFormato(fmt, el) {
+  document.querySelectorAll('.formato-opt').forEach(e => e.classList.remove('selected'))
+  el.classList.add('selected')
+  S.genData.formato = fmt
+}
+
+const ICP_OPTS = [
+  ['OBRAS_PUBLICAS','Obras Públicas','Construtoras com contratos públicos'],
+  ['ALTO_PADRAO','Alto Padrão','Obras residenciais premium'],
+  ['INCORPORADORAS','Incorporadoras','Empresas de incorporação imobiliária'],
+  ['MULTIPLAS_OBRAS','Múltiplas Obras','3+ obras simultâneas'],
+  ['DONOS','Donos de Construtora','Decisores e proprietários'],
+  ['DIRETORES','Diretores de Engenharia','Gestão estratégica'],
+  ['GESTORES','Gestores de Obra','Coordenadores de campo'],
+  ['ENGENHEIROS','Engenheiros Civis','Profissionais técnicos'],
+  ['ALTO_VGV','Alto VGV','Empreendimentos acima de R$20M'],
+  ['DOR_OPERACIONAL','Gargalo Operacional','Prazo, custo, compras, execução'],
+]
+function renderStepIcp() {
+  const sel = S.genData.icp
+  return `
+    <div style="margin-bottom:12px;font-size:13px;color:var(--text-2)">Para qual perfil de cliente é este conteúdo?</div>
+    <div class="grid-opts">
+      ${ICP_OPTS.map(([k,label,desc]) => `
+        <div class="grid-opt ${sel === k ? 'selected' : ''}" onclick="selectIcp('${k}',this)" title="${desc}">${label}</div>
+      `).join('')}
+    </div>
+  `
+}
+function selectIcp(icp, el) {
+  document.querySelectorAll('.grid-opt').forEach(e => e.classList.remove('selected'))
+  el.classList.add('selected')
+  S.genData.icp = icp
+}
+
+const OBJ_OPTS = [
+  ['GERAR_AUTORIDADE','Gerar autoridade'],['EDUCAR_MERCADO','Educar mercado'],
+  ['ATRAIR_LEAD','Atrair lead qualificado'],['GERAR_DIRETO','Gerar conversa no direct'],
+  ['CONVIDAR_DIAGNOSTICO','Convidar para diagnóstico'],['MOSTRAR_ROTINA','Mostrar rotina do assessor'],
+  ['MOSTRAR_DIFERENCIAL','Mostrar diferencial EAP'],['QUEBRAR_OBJECAO','Quebrar objeção'],
+  ['FILTRAR_PUBLICO','Filtrar público'],['RECONHECIMENTO_LOCAL','Reconhecimento local'],
+]
+function renderStepObjetivo() {
+  const sel = S.genData.objetivo
+  return `
+    <div style="margin-bottom:12px;font-size:13px;color:var(--text-2)">Qual é o objetivo principal deste conteúdo?</div>
+    <div class="grid-opts">
+      ${OBJ_OPTS.map(([k,label]) => `
+        <div class="grid-opt ${sel === k ? 'selected' : ''}" onclick="selectObjetivo('${k}',this)">${label}</div>
+      `).join('')}
+    </div>
+  `
+}
+function selectObjetivo(obj, el) {
+  document.querySelectorAll('.grid-opt').forEach(e => e.classList.remove('selected'))
+  el.classList.add('selected')
+  S.genData.objetivo = obj
+}
+
+function renderStepTema() {
+  const agente = S.genData.canal === 'LINKEDIN' ? 'Bia'
+    : S.genData.canal === 'INSTAGRAM' ? 'Cláudio'
+    : null
+  const agenteInfo = agente
+    ? `<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:12px 14px;background:rgba(184,138,42,.07);border:1px solid rgba(184,138,42,.2);border-radius:var(--r)">
+        <span style="font-size:20px">${agente === 'Bia' ? '✍️' : '🎠'}</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-1)">${agente} vai sugerir e criar o conteúdo</div>
+          <div style="font-size:11px;color:var(--text-2);margin-top:2px">O agente escolherá o melhor tema com base no ICP e objetivo que você selecionou. Se quiser direcionar, adicione contexto abaixo.</div>
+        </div>
+      </div>`
+    : `<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:12px 14px;background:rgba(27,61,143,.06);border:1px solid rgba(27,61,143,.15);border-radius:var(--r)">
+        <span style="font-size:20px">🤖</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-1)">O agente definirá o tema ideal</div>
+          <div style="font-size:11px;color:var(--text-2);margin-top:2px">Com base no ICP e objetivo selecionados, o prompt instrui o agente a escolher o tema mais relevante. Adicione contexto abaixo se quiser influenciar a direção.</div>
+        </div>
+      </div>`
+
+  return `
+    ${agenteInfo}
+    <div style="margin-bottom:6px;font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px">Contexto adicional <span style="font-weight:400;color:var(--text-3);text-transform:none;letter-spacing:0">(opcional)</span></div>
+    <textarea class="tema-input" id="gen-tema-input" placeholder="Ex: quero falar sobre gestão de compras em obra… ou deixe em branco para o agente escolher o tema.">${S.genData.tema || ''}</textarea>
+    <div style="margin-top:10px;font-size:11px;color:var(--text-3);line-height:1.6">
+      💡 <strong>Dica:</strong> Quanto menos você restringir, mais criativo e variado será o conteúdo gerado a cada uso.
+    </div>
+  `
+}
+
+function renderStepResultado() {
+  if (S.genError) {
+    return `<div style="padding:24px;text-align:center">
+      <div style="font-size:28px;margin-bottom:12px">⚠️</div>
+      <div style="font-weight:700;color:var(--danger);margin-bottom:8px">Não foi possível gerar o prompt</div>
+      <div style="font-size:13px;color:var(--text-2);margin-bottom:20px">${escHtml(S.genError)}</div>
+      <button class="btn btn-gold" onclick="S.genStep=5;S.genError=null;renderGenStep()">← Voltar e tentar novamente</button>
+    </div>`
+  }
+  if (!S.genResult) {
+    return `<div class="loading-spinner"><div class="spinner"></div><div class="loading-text">Gerando prompt com os agentes de IA EAP...</div></div>`
+  }
+  const r = S.genResult  // { agente, prompt, promptImagem, rascunho }
+  const fmt = S.genData.formato
+  const agente = r.agente
+
+  // ── Cabeçalho de sucesso ─────────────────────────────────────────────────
+  let html = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:12px 16px;background:rgba(31,122,77,.08);border-radius:var(--r);border:1px solid rgba(31,122,77,.2)">
+      <span style="color:var(--ok);font-size:20px">✓</span>
+      <div>
+        <div style="font-weight:700;color:var(--ok)">Prompts gerados com sucesso</div>
+        <div style="font-size:12px;color:var(--text-2)">${FMT_LABELS[fmt]||fmt} · ${S.genData.canal} · ${ICP_LABELS[S.genData.icp]||''}</div>
+      </div>
+    </div>
+  `
+
+  // ── Card do agente + fluxo em 2 passos (quando existe agente: Bia ou Cláudio) ──
+  if (agente) {
+    html += `
+      <div class="agente-card">
+        <div class="agente-info">
+          <div class="agente-avatar">${agente.emoji || '🤖'}</div>
+          <div>
+            <div class="agente-nome">${agente.nome}</div>
+            <div class="agente-sub">${agente.subtitulo}</div>
+            <div class="agente-instrucao">💡 Siga os passos abaixo na ordem. Cole cada prompt no ${agente.nome} e aguarde a resposta antes de avançar.</div>
+          </div>
+        </div>
+        <a class="btn-abrir-agente" href="${agente.link}" target="_blank" rel="noopener">
+          🚀 Abrir ${agente.nome} no ChatGPT
+        </a>
+      </div>
+    `
+
+    // ── Divisor ──────────────────────────────────────────────────────────────
+    html += `<div style="display:flex;align-items:center;gap:10px;margin:4px 0 16px">
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <span style="font-size:11px;font-weight:700;color:var(--text-3);letter-spacing:.06em">SIGA OS PASSOS ABAIXO NA ORDEM</span>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>`
+
+    // ── Passo 1 — Texto ──────────────────────────────────────────────────────
+    const k1 = 'cb' + (++_cbIdx)
+    _CB[k1] = r.prompt || ''
+    const p1Desc = S.genData.canal === 'INSTAGRAM'
+      ? (fmt === 'CARROSSEL' ? 'Cole no agente. Ele vai gerar os textos dos 9 painéis e a legenda. Aguarde a aprovação antes de avançar para as imagens.'
+        : fmt === 'REELS' ? 'Cole no agente. Ele vai gerar o roteiro completo e a legenda. Aguarde a aprovação antes de avançar.'
+        : 'Cole no agente. Ele vai gerar o texto do post e as hashtags.')
+      : 'Cole no agente. Ele vai gerar o texto completo do post, variação e hashtags.'
+    html += `
+      <div style="border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--navy);color:#fff">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0">1</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:14px">Passo 1 — Textos</div>
+            <div style="font-size:11px;opacity:.7;margin-top:1px">${p1Desc}</div>
+          </div>
+          <button class="btn-copy-prompt" onclick="_copyBuf('${k1}')">📋 Copiar</button>
+        </div>
+        <div class="prompt-box" style="border-radius:0;border:none;border-top:1px solid var(--border-md)">${escHtml(r.prompt || '')}</div>
+      </div>
+    `
+
+    // ── Passo 2 — Imagem ─────────────────────────────────────────────────────
+    const k2 = 'cb' + (++_cbIdx)
+    _CB[k2] = r.promptImagem || ''
+    const p2Desc = S.genData.canal === 'INSTAGRAM'
+      ? (fmt === 'CARROSSEL' ? 'Depois de aprovar os textos, cole este prompt. O agente vai gerar cada card um por um aguardando sua confirmação.'
+        : fmt === 'REELS' ? 'Depois de aprovar o roteiro, cole este prompt para gerar a thumbnail do Reels.'
+        : 'Depois de aprovar o texto, cole este prompt para gerar a imagem do post.')
+      : 'Depois de aprovar o texto, cole este prompt para gerar a imagem de capa do post.'
+    html += `
+      <div style="border:1px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--navy2);color:#fff">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0">2</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:14px">Passo 2 — Imagem</div>
+            <div style="font-size:11px;opacity:.7;margin-top:1px">${p2Desc}</div>
+          </div>
+          <button class="btn-copy-prompt" onclick="_copyBuf('${k2}')">📋 Copiar</button>
+        </div>
+        <div class="prompt-box" style="border-radius:0;border:none;border-top:1px solid var(--border-md)">${escHtml(r.promptImagem || '')}</div>
+      </div>
+    `
+  } else {
+    // ── Sem agente — bloco único (fallback) ──────────────────────────────────
+    const k = 'cb' + (++_cbIdx)
+    _CB[k] = r.prompt || ''
+    html += `
+      <div style="margin-bottom:20px">
+        <div class="prompt-header">
+          <span class="prompt-label">📋 Prompt completo</span>
+          <button class="btn-copy-prompt" onclick="_copyBuf('${k}')">📋 Copiar prompt</button>
+        </div>
+        <div class="prompt-box">${escHtml(r.prompt || '')}</div>
+      </div>
+    `
+  }
+
+  // ── Rascunho de referência (colapsado) ───────────────────────────────────
+  const rascunho = r.rascunho || {}
+  const rascunhoId = 'rascunho-' + Date.now()
+  html += `
+    <div class="rascunho-toggle" id="tog-${rascunhoId}" onclick="toggleRascunho('${rascunhoId}')">
+      <span class="chevron">▶</span> Ver rascunho de referência
+    </div>
+    <div class="rascunho-body" id="${rascunhoId}">
+      ${buildRascunhoHtml(rascunho, S.genData.canal, fmt)}
+    </div>
+  `
+
+  return html
+}
+
+// Buffer global para textos copiáveis — evita JSON inline em onclick (quebra com textos longos)
+const _CB = {}
+let _cbIdx = 0
+
+function resultBlock(label, text) {
+  const safe = typeof text === 'string' ? text : String(text)
+  const key = 'cb' + (++_cbIdx)
+  _CB[key] = safe
+  return `<div class="result-block">
+    <div class="result-label">${label} <button class="result-copy-btn" onclick="_copyBuf('${key}')">Copiar</button></div>
+    <div class="result-text">${escHtml(safe)}</div>
+  </div>`
+}
+
+function _copyBuf(key) {
+  const text = _CB[key]
+  if (text !== undefined) copyText(text)
+}
+
+// ── Monta HTML do rascunho de referência ─────────────────────
+function buildRascunhoHtml(rascunho, canal, fmt) {
+  if (!rascunho || Object.keys(rascunho).length === 0) {
+    return '<p style="font-size:12px;color:var(--text-3)">Sem rascunho disponível.</p>'
+  }
+  let html = ''
+  if (canal === 'LINKEDIN' && rascunho.post) {
+    html += resultBlock('Post LinkedIn', rascunho.post)
+    if (rascunho.variacaoCurta) html += resultBlock('Variação curta', rascunho.variacaoCurta)
+    if (rascunho.cta) html += resultBlock('CTA', rascunho.cta)
+    if (rascunho.hashtags) html += resultBlock('Hashtags', Array.isArray(rascunho.hashtags) ? rascunho.hashtags.join(' ') : rascunho.hashtags)
+    if (rascunho.comentarioFixo) html += resultBlock('Comentário fixo sugerido', rascunho.comentarioFixo)
+  } else if (fmt === 'CARROSSEL' && rascunho.paineis) {
+    html += `<div class="result-block">
+      <div class="result-label">Carrossel — ${rascunho.paineis.length} painéis</div>
+      <div style="background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--r);padding:14px">
+        ${rascunho.paineis.map(p => `
+          <div class="painel-row">
+            <div class="painel-num">${p.numero}</div>
+            <div class="painel-content">
+              <div class="painel-txt">${escHtml(p.texto)}</div>
+              ${p.direcaoVisual ? `<div class="painel-vis">📸 ${escHtml(p.direcaoVisual)}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`
+    if (rascunho.legenda) html += resultBlock('Legenda do post', rascunho.legenda)
+    if (rascunho.promptCapa) html += resultBlock('Prompt da capa', rascunho.promptCapa)
+  } else if (fmt === 'REELS' && rascunho.roteiro) {
+    html += resultBlock('Roteiro', rascunho.roteiro)
+    if (rascunho.textoTeleprompter) html += resultBlock('Teleprompter', rascunho.textoTeleprompter)
+    if (rascunho.legenda) html += resultBlock('Legenda', rascunho.legenda)
+  } else if (rascunho.legendaFinal) {
+    html += resultBlock('Legenda final', rascunho.legendaFinal)
+    if (rascunho.versaoCurta) html += resultBlock('Versão curta', rascunho.versaoCurta)
+    if (rascunho.cta) html += resultBlock('CTA', rascunho.cta)
+    if (rascunho.hashtags) html += resultBlock('Hashtags', Array.isArray(rascunho.hashtags) ? rascunho.hashtags.join(' ') : rascunho.hashtags)
+  } else {
+    html += `<pre style="white-space:pre-wrap;font-size:12px;background:var(--bg-soft);padding:14px;border-radius:var(--r);overflow-x:auto">${escHtml(JSON.stringify(rascunho, null, 2))}</pre>`
+  }
+  if (rascunho.promptImagem) {
+    const pImg = typeof rascunho.promptImagem === 'object' ? (rascunho.promptImagem.promptImagem || '') : rascunho.promptImagem
+    if (pImg) {
+      const imgKey = 'cb' + (++_cbIdx)
+      _CB[imgKey] = pImg
+      html += `<div style="margin-top:16px;padding:14px;background:rgba(27,61,143,.04);border:1px solid rgba(27,61,143,.12);border-radius:var(--r)">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;margin-bottom:8px">🖼 Prompt de Imagem</div>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.6">${escHtml(pImg)}</div>
+        <button class="result-copy-btn" style="margin-top:8px" onclick="_copyBuf('${imgKey}')">Copiar prompt</button>
+      </div>`
+    }
+  }
+  return html || '<p style="font-size:12px;color:var(--text-3)">Sem rascunho disponível.</p>'
+}
+
+// ── Colapsar / expandir rascunho ─────────────────────────────
+function toggleRascunho(id) {
+  const body = document.getElementById(id)
+  const tog  = document.getElementById('tog-' + id)
+  if (!body || !tog) return
+  const isOpen = body.classList.toggle('open')
+  tog.classList.toggle('open', isOpen)
+}
+
+// ── Copiar prompt pelo ID do conteúdo (linha da tabela) ──────
+function copiarPrompt(id) {
+  const c = S.conteudos.find(x => x.id === id)
+  if (!c || !c.conteudo || !c.conteudo.prompt) { toast('Prompt não encontrado'); return }
+  copyText(c.conteudo.prompt)
+}
+
+// ── Copia o prompt do resultado do wizard (Step 6) ───────────
+function copyCurrentPrompt() {
+  const p = S.genResult && S.genResult.prompt
+  if (p) copyText(p)
+  else toast('Prompt não disponível')
+}
+
+// ── Copia o prompt do modal de visualização ──────────────────
+function copyActivePrompt() {
+  const p = S.activeContent && S.activeContent.conteudo && S.activeContent.conteudo.prompt
+  if (p) copyText(p)
+  else toast('Prompt não disponível')
+}
+
+// ── Logout ───────────────────────────────────────────────────
+function logout() {
+  localStorage.removeItem('eap_t')
+  localStorage.removeItem('eap_u')
+  location.href = 'painel.html'
+}
+
+async function genNext() {
+  const step = S.genStep
+  if (step === 1) {
+    if (!S.genData.canal) { toast('Selecione um canal'); return }
+    S.genStep = 2
+  } else if (step === 2) {
+    if (!S.genData.formato) { toast('Selecione um formato'); return }
+    // Pula step 3 (ICP) se já veio pré-preenchido pelo chip
+    S.genStep = S.genData.icp ? 4 : 3
+  } else if (step === 3) {
+    if (!S.genData.icp) { toast('Selecione o ICP'); return }
+    S.genStep = 4
+  } else if (step === 4) {
+    if (!S.genData.objetivo) { toast('Selecione o objetivo'); return }
+    S.genStep = 5
+  } else if (step === 5) {
+    const temaEl = document.getElementById('gen-tema-input')
+    if (temaEl) S.genData.tema = temaEl.value.trim()
+    // tema é opcional — se vazio, o agente ChatGPT escolhe o melhor tema
+    S.genStep = 6
+    S.genError = null
+    renderGenStep()
+    // Gerar prompt na API (operação local, sem IA externa — deve ser rápida)
+    try {
+      const result = await api('POST', '/marketing/gerar', {
+        canal: S.genData.canal,
+        formato: S.genData.formato,
+        icp: S.genData.icp,
+        objetivo: S.genData.objetivo,
+        tema: S.genData.tema,
+      })
+      if (result === null) return  // 401 → api() já redirecionou para login
+      if (result && result.conteudo) {
+        S.genResult = result.conteudo
+        S.genResultId = result.id
+      } else {
+        S.genError = result?.message
+          ? `Erro do servidor: ${result.message}`
+          : 'Resposta inválida do servidor. Tente novamente.'
+      }
+    } catch(e) {
+      S.genError = 'Erro ao gerar o prompt. Verifique se o backend está rodando e tente novamente.'
+    }
+    renderGenStep()
+    return
+  } else if (step === 6) {
+    closeGenModal()
+    return
+  }
+  renderGenStep()
+}
+function genBack() {
+  if (S.genStep <= 1) return
+  let prev = S.genStep - 1
+  // Pula steps pré-preenchidos ao voltar
+  if (prev === 3 && S.genData.icp)   prev = 2  // pula ICP se icp veio do chip
+  if (prev === 1 && S.genData.canal) return     // não volta além do ponto de entrada (formato)
+  S.genStep = prev
+  renderGenStep()
+}
+
+// ─────────────────────────────────────────────────────────────
+// CONTENT MODAL
+// ─────────────────────────────────────────────────────────────
+function openContentModal(id) {
+  const c = S.conteudos.find(x => x.id === id)
+  if (!c) return
+  S.activeContentId = id
+  S.activeContent = c
+
+  const ov = document.getElementById('content-modal-ov')
+  const body = document.getElementById('content-modal-body')
+  const title = document.getElementById('content-modal-title')
+  const footer = document.getElementById('content-modal-footer')
+  const statusSel = document.getElementById('content-status-sel')
+
+  footer.style.display = ''
+  title.textContent = c.tema
+  statusSel.value = c.status
+
+  const conteudo = c.conteudo || {}
+  const agente   = conteudo.agente || null
+  const prompt   = conteudo.prompt || ''
+  const rascunho = conteudo.rascunho || conteudo  // fallback: se for estrutura antiga, usa conteudo direto
+  const fmt      = c.formato
+  const rascId   = 'modal-rascunho-' + id
+
+  let html = ''
+
+  // ── Card do agente ────────────────────────────────────────────
+  if (agente) {
+    html += `
+      <div class="agente-card" style="margin-bottom:20px">
+        <div class="agente-info">
+          <div class="agente-avatar">${agente.emoji || '🤖'}</div>
+          <div>
+            <div class="agente-nome">${agente.nome}</div>
+            <div class="agente-sub">${agente.subtitulo}</div>
+            <div class="agente-instrucao">💡 Abra o ${agente.nome} no ChatGPT, cole o prompt abaixo e siga as etapas indicadas.</div>
+          </div>
+        </div>
+        <a class="btn-abrir-agente" href="${agente.link}" target="_blank" rel="noopener">
+          🚀 Abrir ${agente.nome} no ChatGPT
+        </a>
+      </div>
+    `
+  }
+
+  // ── Prompt completo (bloco único com etapas embutidas) ────────
+  if (prompt) {
+    const mk = 'cb' + (++_cbIdx); _CB[mk] = prompt
+    html += `
+      <div style="margin-bottom:20px">
+        <div class="prompt-header">
+          <span class="prompt-label">📋 Prompt completo — cole no agente e siga as etapas</span>
+          <button class="btn-copy-prompt" onclick="_copyBuf('${mk}')">📋 Copiar prompt</button>
+        </div>
+        <div class="prompt-box">${escHtml(prompt)}</div>
+      </div>
+    `
+  }
+
+  // ── Rascunho de referência (colapsado) ────────────────────────
+  html += `
+    <div class="rascunho-toggle" id="tog-${rascId}" onclick="toggleRascunho('${rascId}')">
+      <span class="chevron">▶</span> Ver rascunho de referência
+    </div>
+    <div class="rascunho-body" id="${rascId}">
+      ${buildRascunhoHtml(rascunho, c.canal, fmt)}
+    </div>
+  `
+
+  body.innerHTML = html
+  ov.classList.add('open')
+}
+function closeContentModal() {
+  document.getElementById('content-modal-ov').classList.remove('open')
+  document.getElementById('content-modal-footer').style.display = ''
+  S.activeContentId = null
+}
+async function updateContentStatus() {
+  const id = S.activeContentId
+  if (!id) return
+  const status = document.getElementById('content-status-sel').value
+  await api('PATCH', `/marketing/conteudos/${id}`, { status })
+  const c = S.conteudos.find(x => x.id === id)
+  if (c) c.status = status
+  renderConteudos()
+  toast('Status atualizado')
+}
+async function marcarPublicado() {
+  if (!S.activeContentId) return
+  await api('PATCH', `/marketing/conteudos/${S.activeContentId}`, { status: 'PUBLICADO' })
+  const c = S.conteudos.find(x => x.id === S.activeContentId)
+  if (c) c.status = 'PUBLICADO'
+  renderConteudos()
+  closeContentModal()
+  toast('Conteúdo marcado como publicado!')
+  renderPerfFromConteudos(S.conteudos)
+}
+function copyAllContent() {
+  // Prioridade: copiar o prompt do conteúdo ativo
+  if (S.activeContent && S.activeContent.conteudo && S.activeContent.conteudo.prompt) {
+    copyText(S.activeContent.conteudo.prompt)
+    return
+  }
+  // Fallback: copiar todos os .result-text visíveis
+  const body = document.getElementById('content-modal-body') || document.getElementById('gen-modal-body')
+  if (!body) return
+  const texts = [...body.querySelectorAll('.result-text')].map(el => el.textContent).join('\n\n---\n\n')
+  copyText(texts || 'Nenhum conteúdo para copiar')
+}
+
+// ─────────────────────────────────────────────────────────────
+// CONTEÚDOS — AÇÕES RÁPIDAS
+// ─────────────────────────────────────────────────────────────
+async function copiarConteudo(id) {
+  const c = S.conteudos.find(x => x.id === id)
+  if (!c || !c.conteudo) return
+  const r = c.conteudo
+  let text = ''
+  if (r.post) text = r.post + (r.hashtags ? '\n\n' + r.hashtags.join(' ') : '')
+  else if (r.paineis) text = r.paineis.map(p => `[${p.numero}] ${p.texto}`).join('\n\n') + (r.legenda ? '\n\n---\nLEGENDA:\n' + r.legenda : '')
+  else if (r.legendaFinal) text = r.legendaFinal
+  else if (r.roteiro) text = r.roteiro
+  else text = JSON.stringify(r, null, 2)
+  copyText(text)
+}
+async function quickPublicar(id) {
+  await api('PATCH', `/marketing/conteudos/${id}`, { status: 'PUBLICADO' })
+  const c = S.conteudos.find(x => x.id === id)
+  if (c) c.status = 'PUBLICADO'
+  renderConteudos()
+  toast('Publicado!')
+}
+async function arquivarConteudo(id) {
+  await api('DELETE', `/marketing/conteudos/${id}`)
+  S.conteudos = S.conteudos.filter(x => x.id !== id)
+  renderConteudos()
+  toast('Conteúdo arquivado')
+}
+
+// ─────────────────────────────────────────────────────────────
+// CALENDÁRIO MODAL
+// ─────────────────────────────────────────────────────────────
+function openCalModal(date) {
+  S.calEditId = null
+  S.calPrefillDate = date || null
+  document.getElementById('cal-modal-title').textContent = 'Adicionar ao Calendário'
+  document.getElementById('cal-data').value = date || new Date().toISOString().split('T')[0]
+  document.getElementById('cal-canal').value = 'INSTAGRAM'
+  document.getElementById('cal-formato').value = ''
+  document.getElementById('cal-tema').value = ''
+  document.getElementById('cal-status').value = 'IDEIA'
+  document.getElementById('cal-obs').value = ''
+  document.getElementById('cal-modal-ov').classList.add('open')
+}
+function openCalEntradaModal(id) {
+  const e = S.calendario.find(x => x.id === id)
+  if (!e) return
+  S.calEditId = id
+  document.getElementById('cal-modal-title').textContent = 'Editar Entrada'
+  document.getElementById('cal-data').value = new Date(e.data).toISOString().split('T')[0]
+  document.getElementById('cal-canal').value = e.canal
+  document.getElementById('cal-formato').value = e.formato || ''
+  document.getElementById('cal-tema').value = e.tema
+  document.getElementById('cal-status').value = e.status
+  document.getElementById('cal-obs').value = e.observacoes || ''
+  document.getElementById('cal-modal-ov').classList.add('open')
+}
+function closeCalModal() { document.getElementById('cal-modal-ov').classList.remove('open') }
+async function saveCalEntry() {
+  const data = {
+    data: document.getElementById('cal-data').value,
+    canal: document.getElementById('cal-canal').value,
+    formato: document.getElementById('cal-formato').value || undefined,
+    tema: document.getElementById('cal-tema').value.trim(),
+    status: document.getElementById('cal-status').value,
+    observacoes: document.getElementById('cal-obs').value.trim() || undefined,
+  }
+  if (!data.tema) { toast('Informe o tema'); return }
+  if (S.calEditId) {
+    await api('PATCH', `/marketing/calendario/${S.calEditId}`, data)
+  } else {
+    await api('POST', '/marketing/calendario', data)
+  }
+  closeCalModal()
+  const cal = await api('GET', '/marketing/calendario')
+  if (cal) { S.calendario = cal; renderCalendario() }
+  toast('Calendário atualizado')
+}
+
+// ─────────────────────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────────────────────
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => toast('Copiado!')).catch(() => {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+    toast('Copiado!')
+  })
+}
+let toastTimer
+function toast(msg) {
+  const el = document.getElementById('toast')
+  el.textContent = msg
+  el.classList.add('show')
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800)
+}
+function escHtml(str) {
+  if (typeof str !== 'string') return ''
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+}
+function openSb() { document.getElementById('sb').classList.add('open'); document.getElementById('sb-ov').classList.add('open') }
+function closeSb() { document.getElementById('sb').classList.remove('open'); document.getElementById('sb-ov').classList.remove('open') }
+
+// Fechar modais com ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeGenModal()
+    closeContentModal()
+    closeCalModal()
+  }
+})
+// Fechar modais ao clicar no overlay
+document.getElementById('gen-modal-ov').addEventListener('click', function(e) { if (e.target === this) closeGenModal() })
+document.getElementById('content-modal-ov').addEventListener('click', function(e) { if (e.target === this) closeContentModal() })
+document.getElementById('cal-modal-ov').addEventListener('click', function(e) { if (e.target === this) closeCalModal() })
+
+// ─────────────────────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────────────────────
+loadPage()
+</script>
+</body>
+</html>
